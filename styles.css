@@ -175,6 +175,13 @@ button:hover {
     margin: 0 !important;
 }
 
+/* In styles.css */
+.papaya.viewer {
+    width: 100% !important;    
+    height: 400px !important;
+    position: relative;
+}
+
 .papaya-toolbar {
     display: none !important;
 }

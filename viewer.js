@@ -2,128 +2,86 @@
 // Initialize Papaya medical image viewer application
 let viewers = [];
 let syncEnabled = true;
-
-// Configuration for each Papaya viewer
-const papayaContainers = [
-    { id: "papaya-viewer-0", allowPropagation: true },
-    { id: "papaya-viewer-1", allowPropagation: true },
-    { id: "papaya-viewer-2", allowPropagation: true },
-    { id: "papaya-viewer-3", allowPropagation: true }
-];
-
-// Global parameters and configuration
-const params = [];
-params.worldSpace = true; // Default to world space coordinates
-params.fullScreen = false;
-params.showControls = false;
-params.allowScroll = true;
-//params.orthogonal = false;
-//params.mainView = "axial";
-
-
-// Initialize Papaya viewers
+let syncViewersWorld = false;
+ 
 function initPapayaViewers() {
-    papayaContainers.forEach((container, index) => {
-        // Each viewer gets its own params
-        container.params = Object.assign({}, params);
-        container.params.kioskMode = true;
-        container.smoothDisplay = true;
+    console.log("Starting Papaya initialization...");
+    
+
+    const my_params = {
+        worldSpace: true,
+        kioskMode: true,
+        smoothDisplay: true,
+        showControls: false,
+        allowScroll: true,
+        orthogonal : false,
+        mainView : "axial"
+    };
+
+    
+    papayaContainers_ = [
+        { container: document.getElementById("papaya-viewer-0"), params: my_params },
+        { container: document.getElementById("papaya-viewer-1"), params: my_params },
+        { container: document.getElementById("papaya-viewer-2"), params: my_params },
+        { container: document.getElementById("papaya-viewer-3"), params: my_params }
+    ].filter(container => {
+        if (!container.container) {
+            console.error("Missing container element:", container);
+            return false;
+        }
+        return true;
     });
+
+    if (typeof papaya === 'undefined' || !papaya.Container) {
+        console.error("Papaya library is not loaded or Container is missing.");
+    } else {
+        console.log("Papaya library loaded successfully.");
+    }
+    console.log("Papaya initialization triggered");
+    papaya.Container.startPapaya(papayaContainers_);
+
+     
+    console.log("Papaya initialization 2", papayaContainers.length);
+    //papaya.Container.resetViewer(0, my_params);
     
-    // Init the viewers
-    papaya.Container.startPapaya();
+     
+    papaya.Container.syncViewers = syncEnabled;
+    papaya.Container.syncViewersWorld = syncViewersWorld;
+    //papaya.Container.orthogonal = false;
     
-    // Wait for viewers to be fully initialized
+    
     waitForViewersToLoad();
 }
 
-// Wait for Papaya viewers to be fully initialized
 function waitForViewersToLoad() {
-    // Check if viewers are loaded
-    if (papaya.Container.viewers && 
-        Object.keys(papaya.Container.viewers).length === papayaContainers.length) {
-        
-        // Store references to the viewers
-        papayaContainers.forEach((container, index) => {
-            const viewerIndex = "papaya-viewer-" + index;
-            viewers[index] = papaya.Container.viewers[viewerIndex];
-        });
+    console.log("Checking for available viewers...");
+    
+    // Method 1: Try accessing viewers through Papaya's viewer registry
+    //viewers = [];
 
-        // Set up synchronization observers
-        setupSynchronization();
-        console.log("Papaya viewers initialized successfully");
+    for (let index = 0; index < 4; index++) {
+        console.log("Processing container at index", index);
+        viewers[index] = papayaContainers[index].viewer
+        //viewers[index].resetViewer();
+    }
+     
+
+    // Proper initialization check with 3 conditions
+    const allReady = ( viewers.length === 4 )
+
+    
+
+    if (allReady) {
+        console.log("All viewers initialized:", viewers);
+        //setupSynchronization();
     } else {
-        // Check again after a short delay
-        setTimeout(waitForViewersToLoad, 100);
+        console.log(`Viewers ready: ${viewers.filter(v => v?.papayaViewer?.isReady).length}/4`);
+        setTimeout(waitForViewersToLoad, 200);
     }
 }
-
-// Setup synchronization between viewers
-function setupSynchronization() {
-    console.log(`Configuring synchronization (${syncEnabled ? 'ENABLED' : 'DISABLED'})`);
+ 
     
-    // Remove existing listeners from all viewers
-    viewers.forEach(viewer => {
-        if (viewer && viewer._syncListeners) {
-            viewer._syncListeners.forEach(listener => {
-                if (listener.type === 'sliceChanged') {
-                    viewer.removeSliceChangedListener(listener.handler);
-                } else {
-                    viewer.viewer.removeEventListener(listener.event, listener.handler);
-                }
-            });
-            viewer._syncListeners = [];
-        }
-    });
-    
-    if (!syncEnabled) {
-        console.log("Synchronization is now DISABLED");
-        return;
-    }
-    
-    // Function to sync other viewers from a source viewer
-    function syncFromSource(sourceIndex) {
-        if (!syncEnabled) return;
-        const sourceViewer = viewers[sourceIndex];
-        if (!sourceViewer || !sourceViewer.volume) return;
-        const worldCoords = sourceViewer.getWorldCoordinates();
-        viewers.forEach((viewer, index) => {
-            if (index !== sourceIndex && viewer && viewer.volume) {
-                viewer.gotoWorldCoordinate(worldCoords.x, worldCoords.y, worldCoords.z);
-                viewer.drawViewer(true, false);
-            }
-        });
-    }
-    
-    // Add event listeners to each viewer
-    viewers.forEach((viewer, index) => {
-        if (!viewer) return;
-        viewer._syncListeners = [];
-        
-        // Mouse and wheel events for panning, zooming, and scrolling
-        ['mousedown', 'mouseup', 'mousemove', 'wheel'].forEach(eventType => {
-            const handler = () => syncFromSource(index);
-            viewer.viewer.addEventListener(eventType, handler);
-            viewer._syncListeners.push({ event: eventType, handler });
-        });
-        
-        // Slice change listener if supported
-        if (viewer.addSliceChangedListener) {
-            const sliceHandler = () => syncFromSource(index);
-            viewer.addSliceChangedListener(sliceHandler);
-            viewer._syncListeners.push({ type: 'sliceChanged', handler: sliceHandler });
-        }
-    });
-    
-    console.log("✅ Synchronization is now ENABLED");
-    
-    // Initial sync after a delay to ensure volumes are loaded
-    setTimeout(() => {
-        if (syncEnabled && viewers.some(v => v && v.volume)) {
-            syncFromSource(0); // Use first viewer with a volume as reference
-        }
-    }, 1000);
-}
+ 
 
 // Load NIFTI file
 function loadNiftiFile(viewerIndex, file, fileNumber) {
@@ -330,15 +288,7 @@ function loadSampleImages() {
         // Check if all images are loaded
         if (imagesLoaded === sampleUrls.length) {
             console.log("✓ All images loaded successfully!");
-            
-            // In loadSampleImages(), replace the forceViewerSync() call
-            setTimeout(() => {
-                const volumesReady = viewers.filter(v => v && v.volume).length;
-                console.log(`Found ${volumesReady} viewers with volumes ready`);
-                if (syncEnabled && volumesReady > 0) {
-                    syncFromSource(0); // Replace forceViewerSync()
-                }
-            }, 1000);
+
         }
     };
     
@@ -349,6 +299,7 @@ function loadSampleImages() {
         params['images'] = [sampleUrls[i]];
         params['loadingComplete'] = window.papayaLoadCallback;
         
+        //params
         papaya.Container.resetViewer(i, params);
     }
 }
@@ -379,7 +330,7 @@ function resetViewers() {
             }
         }
         // As a fallback, try the direct Papaya API
-        for (let i = 0; i < papayaContainers.length; i++) {
+        for (let i = 0; i < 4; i++) {
             try {
                 papaya.Container.resetViewer(i);
                 console.log(`Applied fallback reset to viewer ${i}`);
@@ -884,8 +835,14 @@ function checkTableOverflow(tbody) {
 
 // Event handling on page load
 document.addEventListener('DOMContentLoaded', function() {
+
+    console.log("DOMContentLoaded");
+    
+    
+    
     // Initialize Papaya viewers
     initPapayaViewers();
+    
     
     // Initialize resizable sidebars
     initResizableSidebars();
@@ -897,16 +854,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Set up synchronization toggle - FIXED
+    
     document.getElementById('toggle-sync').addEventListener('click', function() {
         syncEnabled = !syncEnabled;
         this.textContent = syncEnabled ? 'Disable Sync' : 'Enable Sync';
-        
-        // Important: Re-setup synchronization when toggled
-        setupSynchronization();
+        papaya.Container.syncViewers = syncEnabled;
         
         // Update UI feedback
         console.log(`Synchronization is now ${syncEnabled ? 'enabled' : 'disabled'}`);
+        console.log(`Synchronization is now ${papaya.Container.syncViewers}`);
+
+         
         
         // Show alert without blocking the UI
         const alertDiv = document.createElement('div');
@@ -967,6 +925,8 @@ document.addEventListener('DOMContentLoaded', function() {
         alert("Action 4 triggered");
     });
     
+ 
+
     // Add window resize handler to check for table overflow
     window.addEventListener('resize', function() {
         const tbody = document.querySelector('.file-list-table tbody');
