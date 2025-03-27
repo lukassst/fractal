@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Papaya Viewer - Local Files -->
+    <link rel="stylesheet" type="text/css" href="lib/papaya.css" />
+    <script type="text/javascript" src="lib/papaya.js"></script>
+    <!-- DICOM parser for Papaya -->
+    <script src="lib/daikon.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="layout">
+            <!-- Left Column -->
+            <div class="sidebar left-sidebar" id="left-sidebar">
+                <div class="sidebar-section">
+                    <button id="load-sample">Load Sample Images</button>
+                </div>
+            </div>
+            
+            <!-- Resize handle for left column -->
+            <div class="resize-handle left-resize-handle" id="left-resize-handle"></div>
+            
+            <!-- Center Content - Viewers -->
+            <div class="main-content">
+                <div class="viewer-grid">
+                    <div class="viewer-container">
+                        <div class="viewer-header">Panel 1</div>
+                        <div id="papaya-viewer-0" class="papaya viewer"></div>
+                        <div class="format-selection">
+                            <select id="format1">
+                                <option value="nifti">NIFTI</option>
+                                <option value="dicom">DICOM</option>
+                            </select>
+                            <input type="file" id="file1" multiple>
+                        </div>
+                    </div>
+                    <div class="viewer-container">
+                        <div class="viewer-header">Panel 2</div>
+                        <div id="papaya-viewer-1" class="papaya viewer"></div>
+                        <div class="format-selection">
+                            <select id="format2">
+                                <option value="nifti">NIFTI</option>
+                                <option value="dicom">DICOM</option>
+                            </select>
+                            <input type="file" id="file2" multiple>
+                        </div>
+                    </div>
+                    <div class="viewer-container">
+                        <div class="viewer-header">Panel 3</div>
+                        <div id="papaya-viewer-2" class="papaya viewer"></div>
+                        <div class="format-selection">
+                            <select id="format3">
+                                <option value="nifti">NIFTI</option>
+                                <option value="dicom">DICOM</option>
+                            </select>
+                            <input type="file" id="file3" multiple>
+                        </div>
+                    </div>
+                    <div class="viewer-container">
+                        <div class="viewer-header">Panel 4</div>
+                        <div id="papaya-viewer-3" class="papaya viewer"></div>
+                        <div class="format-selection">
+                            <select id="format4">
+                                <option value="nifti">NIFTI</option>
+                                <option value="dicom">DICOM</option>
+                            </select>
+                            <input type="file" id="file4" multiple>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resize handle for right column -->
+            <div class="resize-handle right-resize-handle" id="right-resize-handle"></div>
+            
+            <!-- Right Column -->
+            <div class="sidebar right-sidebar" id="right-sidebar">
+                <div class="sidebar-section">
+                    <button id="reset">Reset View</button>
+                    <button id="toggle-sync">Disable Sync</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="viewer.js"></script>
+</body>
+</html>

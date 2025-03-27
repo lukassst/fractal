@@ -1,0 +1,246 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* New layout with sidebars */
+.layout {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.sidebar {
+    padding: 15px;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: width 0.1s ease;
+    overflow: hidden;
+}
+
+.left-sidebar, .right-sidebar {
+    width: 15%;
+    height: 100%;
+    min-width: 100px; /* Minimum width for usability */
+    max-width: 30%; /* Maximum width to prevent overly large sidebars */
+}
+
+.left-sidebar {
+    border-right: none;
+}
+
+.right-sidebar {
+    border-left: none;
+}
+
+/* Resize handles */
+.resize-handle {
+    width: 6px;
+    height: 100%;
+    background-color: #ddd;
+    cursor: col-resize;
+    position: relative;
+    z-index: 100;
+    transition: background-color 0.2s;
+}
+
+.resize-handle:hover, 
+.resize-handle.active {
+    background-color: #4285f4;
+}
+
+.left-resize-handle {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.right-resize-handle {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+/* Add a special cursor during resize operation */
+body.resizing {
+    cursor: col-resize !important;
+    user-select: none;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.main-content {
+    flex: 1;
+    height: 100%;
+    padding: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 16px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #3367d6;
+}
+
+.viewer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: 100%;
+}
+
+.viewer-container {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer-header {
+    background-color: #f5f5f5;
+    padding: 8px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    z-index: 10;
+}
+
+.viewer {
+    flex: 1;
+    width: 100%;
+    background-color: #000;
+    position: relative;
+    min-height: 300px;
+}
+
+/* Papaya specific styles */
+.papaya {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.papaya-display {
+    height: 100% !important;
+}
+
+.papaya-container {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+.papaya-toolbar {
+    display: none !important;
+}
+
+/* Hide papaya scroll buttons and controls across all panels - enhanced rules */
+.papaya-increment-button, 
+.papaya-decrement-button, 
+.papaya-goto-center-button, 
+.papaya-goto-origin-button, 
+.papaya-slider-button,
+.papaya-control-button,
+.papaya-control-increment-button,
+.papaya-control-decrement-button,
+.papaya-zoom-button,
+.papaya-contrast-button,
+.papaya button[id*="button"],
+.papaya [class*="button"],
+.papaya [class*="slider"],
+.papaya [class*="control"],
+.papaya-scrollbar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Ensure the container for buttons is also properly handled */
+.papaya-controlbar,
+.papaya-slider,
+.papaya-menu,
+.papaya-kiosk-controls {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Force fullscreen mode in all panels */
+#papaya-viewer-0, #papaya-viewer-1, #papaya-viewer-2, #papaya-viewer-3 {
+    width: 100% !important;
+}
+
+/* Apply !important to main canvas to ensure it takes full space */
+.papaya canvas {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    object-fit: contain !important;
+}
+
+.format-selection {
+    padding: 8px;
+    display: flex;
+    gap: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    z-index: 10;
+}
+
+select, input[type="file"] {
+    padding: 4px;
+}

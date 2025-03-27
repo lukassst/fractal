@@ -1,0 +1,14 @@
+# Libraries
+lib/
+
+# Node modules
+node_modules/
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+
+# System files
+.DS_Store
+Thumbs.db

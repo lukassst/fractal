@@ -1,0 +1,14 @@
+{
+  "name": "medical-image-viewer",
+  "version": "1.0.0",
+  "description": "A web-based medical image viewer using Papaya",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8000",
+    "dev": "http-server -p 8000 -c-1",
+    "setup-libs": "node setup-local-libs.js"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
