@@ -244,3 +244,293 @@ button:hover {
 select, input[type="file"] {
     padding: 4px;
 }
+
+/* File list styling */
+.file-list-container {
+    margin-top: 15px;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+    overflow-x: hidden; /* Changed to hidden as we'll use a separate horizontal scroll container */
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    /* Add consistent scrollbar styling for vertical scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+    /* Add padding at the bottom to account for horizontal scrollbar height */
+    padding-bottom: 0;
+    position: relative; 
+    box-sizing: border-box;
+}
+
+/* Consistent scrollbar styling for vertical scrollbar */
+.file-list-container::-webkit-scrollbar {
+    width: 6px; /* Same size as horizontal scrollbar height */
+    background-color: #f5f5f5;
+}
+
+.file-list-container::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px;
+}
+
+.file-list-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.file-list-container::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* Table wrapper to enable horizontal scrolling */
+.table-scroll-container {
+    width: 100%; /* Subtract vertical scrollbar width */
+    overflow-x: auto; /* Always show scrollbar when needed */
+    position: relative;
+    margin: 0; /* Remove margin to help with alignment */
+    padding: 0;
+    border-radius: 4px 0 0 4px; /* Remove rounded corners on right side */
+    /* Force hardware acceleration for smoother scrolling */
+    transform: translateZ(0);
+    /* Match the Firefox scrollbar settings with the container */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+    /* Ensure the container extends to fill available width */
+    box-sizing: border-box;
+    /* This creates better alignment with the scrollbar */
+    margin-right: 6px;
+}
+
+/* Make the scrollbar more noticeable when it appears */
+.table-scroll-container::-webkit-scrollbar {
+    height: 6px; /* Slightly smaller for less visual impact */
+    background-color: #f5f5f5;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background: #aaa; 
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Fix scrollbar corner alignment */
+.table-scroll-container::-webkit-scrollbar-corner {
+    background-color: #f5f5f5;
+}
+
+.file-list-container::-webkit-scrollbar-corner {
+    background-color: #f5f5f5;
+}
+
+/* Fade effect at table edges to indicate overflow */
+.table-scroll-container.has-overflow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 30px;
+    background: linear-gradient(to right, transparent, #f8f9fa);
+    pointer-events: none; /* Allow clicking through */
+    opacity: 0.7;
+}
+
+/* Make the scrollbar more visible when enabled */
+.table-scroll-container.has-overflow::-webkit-scrollbar-thumb {
+    background: #888;
+    border: 1px solid #f5f5f5;
+}
+
+/* Scroll hint styling */
+.scroll-hint {
+    display: none; /* Hide completely */
+}
+
+/* Customize the scrollbar appearance */
+.table-scroll-container::-webkit-scrollbar {
+    height: 6px; /* Slightly smaller for less visual impact */
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background: #aaa; /* Slightly lighter for subtlety */
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Firefox scrollbar styling */
+.table-scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Unified scrollbar styling */
+.table-scroll-container::-webkit-scrollbar,
+.file-list-container::-webkit-scrollbar {
+    height: 6px; /* For horizontal scrollbars */
+    width: 6px; /* For vertical scrollbars */
+    background-color: #f5f5f5;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb,
+.file-list-container::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover,
+.file-list-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.table-scroll-container::-webkit-scrollbar-track,
+.file-list-container::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* Ensure content takes full space */
+.file-list-table {
+    width: 100%;
+    min-width: 100%; /* Ensure table takes full width */
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: auto; /* Changed from fixed to auto to allow content-based sizing */
+    margin: 0; /* Ensure no bottom margin affects alignment */
+}
+
+/* Remove duplicate styles */
+.file-list-table th,
+.file-list-table td {
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-list-table th,
+.file-list-table td {
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-list-table th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.file-list-table tr:hover {
+    background-color: #f0f7ff;
+}
+
+/* Make table rows clickable with visual feedback */
+.clickable-cell {
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    color: #000; /* Set default color to black */
+}
+
+.clickable-cell:hover {
+    background-color: #e3f2fd;
+    text-decoration: underline;
+}
+
+/* Remove color differences by file type - all entries now black */
+.clickable-cell[data-type="nifti"],
+.clickable-cell[data-type="dicom"] {
+    color: #000; /* Black for both NIFTI and DICOM */
+}
+
+/* Remove styling for load button which is no longer used */
+.load-file-btn {
+    display: none;
+}
+
+/* Loading indicator for image loading */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-size: 16px;
+}
+
+.loading-overlay span {
+    background: #333;
+    padding: 10px 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Number cell styling */
+.number-cell {
+    width: 40px;
+    text-align: center;
+    color: #666;
+    font-weight: normal;
+    user-select: none;
+}
+
+/* Make sure table header row aligns properly with the new column */
+.file-list-table th:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+/* Align column cell content */
+.file-list-table td:first-child {
+    text-align: center;
+}
+
+/* Make sure empty message spans both columns */
+.file-list-table td[colspan="2"] {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+
+/* Specifically target WebKit browsers like Chrome/Edge */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .table-scroll-container {
+        /* Adjust width specifically for WebKit browsers */
+        width: calc(100% - 6px);
+    }
+    
+    /* Ensure the scrollbars align exactly */
+    .file-list-container::-webkit-scrollbar-button:end:vertical {
+        height: 6px; /* Match horizontal scrollbar height */
+    }
+}
+
+/* Firefox-specific adjustments */
+@-moz-document url-prefix() {
+    .table-scroll-container {
+        width: calc(100% - 6px);
+    }
+}
